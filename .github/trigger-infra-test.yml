@@ -1,0 +1,12 @@
+name: Trigger Infra Integration Test
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  call_infra_test:
+    uses: GIBBY-GDGoC-in-GIST/gibby-infra/.github/workflows/integration-test.yml@main
+    secrets:
+      # GIBBY_frontend 저장소의 시크릿을 infra 워크플로우로 전달
+      INTEGRATION_TOKEN: ${{ secrets.INTEGRATION_TOKEN }}
