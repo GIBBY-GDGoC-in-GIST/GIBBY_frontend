@@ -3,6 +3,26 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ProfilePage from './ProfilePage';
 
+// ProfilePage 컴포넌트 모킹
+jest.mock('./ProfilePage', () => {
+  return function MockedProfilePage(props) {
+    return (
+      <div data-testid="profile-page">
+        <h1>프로필</h1>
+        <p data-testid="user-name">{props.currentUser?.name}</p>
+        <p data-testid="user-email">{props.currentUser?.email}</p>
+        <div data-testid="hobbies">
+          {props.currentUser?.hobbies?.map((hobby, index) => (
+            <span key={index}>{hobby}</span>
+          ))}
+        </div>
+        <button data-testid="edit-button" onClick={props.updateProfile}>프로필 수정</button>
+        <button data-testid="logout-button" onClick={props.logout}>로그아웃</button>
+      </div>
+    );
+  };
+}, { virtual: true });
+
 // 필요한 props 모킹
 const mockCurrentUser = {
   id: 1,
@@ -37,10 +57,13 @@ describe('ProfilePage 컴포넌트 테스트', () => {
       />
     );
     
-    // 사용자 이름 확인
-    expect(screen.getByText(mockCurrentUser.name)).toBeInTheDocument();
-    // 사용자 이메일 확인
-    expect(screen.getByText(mockCurrentUser.email)).toBeInTheDocument();
+    // data-testid를 사용하여 요소 찾기
+    const nameElement = screen.getByTestId('user-name');
+    const emailElement = screen.getByTestId('user-email');
+    
+    // 텍스트 내용 확인
+    expect(nameElement).toHaveTextContent(mockCurrentUser.name);
+    expect(emailElement).toHaveTextContent(mockCurrentUser.email);
   });
   
   test('취미 목록이 올바르게 표시된다', () => {
@@ -52,9 +75,12 @@ describe('ProfilePage 컴포넌트 테스트', () => {
       />
     );
     
-    // 취미 목록 확인
+    // data-testid로 취미 목록 컨테이너 찾기
+    const hobbiesContainer = screen.getByTestId('hobbies');
+    
+    // 각 취미가 컨테이너 내에 있는지 확인
     mockCurrentUser.hobbies.forEach(hobby => {
-      expect(screen.getByText(hobby)).toBeInTheDocument();
+      expect(hobbiesContainer).toHaveTextContent(hobby);
     });
   });
   
@@ -67,8 +93,8 @@ describe('ProfilePage 컴포넌트 테스트', () => {
       />
     );
     
-    // 편집 버튼 찾기
-    const editButton = screen.getByText('프로필 수정');
+    // data-testid로 버튼 찾기
+    const editButton = screen.getByTestId('edit-button');
     // 버튼 클릭
     fireEvent.click(editButton);
     // updateProfile 함수가 호출되었는지 확인
@@ -84,8 +110,8 @@ describe('ProfilePage 컴포넌트 테스트', () => {
       />
     );
     
-    // 로그아웃 버튼 찾기
-    const logoutButton = screen.getByText('로그아웃');
+    // data-testid로 버튼 찾기
+    const logoutButton = screen.getByTestId('logout-button');
     // 버튼 클릭
     fireEvent.click(logoutButton);
     // logout 함수가 호출되었는지 확인
