@@ -44,12 +44,12 @@ jest.mock('./App', () => {
         </nav>
 
         <div>
-          {/* 현재 페이지에 따라 적절한 mock 페이지 렌더링 */}
+          {/* 현재 페이지에 따라 적절한 mock 페이지 렌더링 (typo 수정) */}
           {currentPage === 'home' && <div data-testid="post-page">홈 페이지</div>}
           {currentPage === 'profile' && <div data-testid="route-/profile">프로필 페이지</div>}
           {currentPage === 'hobby' && <div data-testid="route-/hobby">취미 페이지</div>}
-          {currentPage === 'appointment' && <div data-testid="route-/appointment\">약속 페이지</div>}
-          {currentPage === 'chat' && <div data-testid="route-/chat\">채팅 페이지</div>}
+          {currentPage === 'appointment' && <div data-testid="route-/appointment">약속 페이지</div>}
+          {currentPage === 'chat' && <div data-testid="route-/chat">채팅 페이지</div>}
         </div>
         <p>현재 사용자: 테스트 사용자</p>
       </div>
@@ -129,8 +129,8 @@ describe('App 컴포넌트 테스트', () => {
     render(<App />);
     expect(screen.getByTestId('login-page')).toBeInTheDocument();
     expect(screen.getByText('로그인 페이지')).toBeInTheDocument();
-    // DOM에는 존재하지만 보이지 않아야 함
-    expect(screen.queryByText('🏠 홈')).not.toBeVisible();
+    // 요소가 아예 없는지 확인
+    expect(screen.queryByText('🏠 홈')).not.toBeInTheDocument();
   });
 
   test('로그인 버튼 클릭 시 네비게이션 바와 홈 페이지가 표시된다', () => {
