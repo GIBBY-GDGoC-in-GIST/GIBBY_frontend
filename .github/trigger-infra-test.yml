@@ -1,4 +1,4 @@
-name: Trigger Infra Dispatch on Backend Change
+name: Trigger Infra Dispatch on Frontend Change
 
 on:
   push:
