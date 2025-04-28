@@ -13,7 +13,8 @@ const HobbyPage = ({ currentUser }) => {
 
   const handleConfirm = () => {
     if (!selectedHobby) {
-      alert("취미를 선택하세요!"); // ✅ 선택 안 했을 경우 경고창
+      alert("취미를 선택하세요!"); // ✅ 선택
+      //  안 했을 경우 경고창
       return;
     }
     navigate("/appointment", { state: { hobby: selectedHobby } }); // ✅ 선택한 취미와 함께 이동

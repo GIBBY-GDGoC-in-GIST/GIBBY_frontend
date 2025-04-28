@@ -53,8 +53,8 @@ const AppointmentPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-center mb-4">약속 잡기</h1>
-        <p className="text-gray-600 text-center mb-4">취미: {hobby}</p>
+        <h1 className="text-3xl font-bold text-center mb-4">Appointment</h1>
+        <p className="text-gray-600 text-center mb-4">Hobby: {hobby}</p>
 
         {/* 취미 선택 */}
         <div className="mb-4">
@@ -63,7 +63,7 @@ const AppointmentPage = () => {
             onChange={(e) => setHobby(e.target.value)}
             className="w-full p-2 border rounded"
           >
-            <option value="">취미를 선택하세요</option>
+            <option value="">Choose your hobby</option>
             {hobbies.map((hobbyOption, index) => (
               <option key={index} value={hobbyOption}>
                 {hobbyOption}
@@ -96,7 +96,7 @@ const AppointmentPage = () => {
           className="w-full mt-6 p-2 bg-green-500 text-white rounded"
           onClick={handleAppointment}
         >
-          약속 잡기
+          Make an appointment
         </button>
       </div>
     </div>

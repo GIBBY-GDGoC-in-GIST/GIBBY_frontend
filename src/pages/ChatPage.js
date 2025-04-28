@@ -49,9 +49,9 @@ const ChatPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-center mb-4">채팅하기</h1>
-        <p className="text-gray-600 text-center mb-4">취미: {hobby}</p>
-        <p className="text-gray-600 text-center mb-4">약속 날짜: {date} 시간: {time}</p>
+        <h1 className="text-3xl font-bold text-center mb-4">Chatting</h1>
+        <p className="text-gray-600 text-center mb-4">Hobby: {hobby}</p>
+        <p className="text-gray-600 text-center mb-4">Appointment Date: {date} Time: {time}</p>
 
         {/* 채팅 메시지 목록 */}
         <div className="h-80 overflow-y-scroll mb-4 border-b pb-4">
@@ -69,13 +69,13 @@ const ChatPage = () => {
           className="w-full p-2 border rounded mb-2"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="메시지를 입력하세요..."
+          placeholder="Please write message..."
         />
         <button 
           className="w-full p-2 bg-blue-500 text-white rounded"
           onClick={handleSendMessage}
         >
-          메시지 보내기
+          Send
         </button>
       </div>
     </div>
