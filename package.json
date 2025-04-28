@@ -17,12 +17,18 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:integration": "react-scripts test --testMatch=\"**/src/**/*.integration.test.js\" --testPathIgnorePatterns=\"node_modules\" --passWithNoTests",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-router-dom)/)"
     ]
   },
   "browserslist": {

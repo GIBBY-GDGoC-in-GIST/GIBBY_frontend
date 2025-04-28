@@ -1,0 +1,16 @@
+name: Trigger Infra Dispatch on Frontend Change
+
+on:
+  push:
+    branches: [ master ] # master 브랜치에 푸시될 때 실행
+
+jobs:
+  dispatch_infra_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch to Infra
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.INTEGRATION_TOKEN }}
+          repository: GIBBY-GDGoC-in-GIST/gibby-infra # 이벤트를 보낼 저장소
+          event-type: trigger-integration-test       # gibby-infra 워크플로우가 기다리는 이벤트 타입
