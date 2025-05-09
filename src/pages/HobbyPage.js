@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const hobbies = ["등산", "요리", "게임", "독서", "음악 감상", "운동"];
+const hobbies = ["hiking", "cooking", "game", "reading", "music", "exercise"];
 
 const HobbyPage = ({ currentUser }) => {
   const [selectedHobby, setSelectedHobby] = useState(null); // ✅ 선택한 취미 상태 저장
@@ -13,7 +13,7 @@ const HobbyPage = ({ currentUser }) => {
 
   const handleConfirm = () => {
     if (!selectedHobby) {
-      alert("취미를 선택하세요!"); // ✅ 선택
+      alert("Choose the hobby!"); // ✅ 선택
       //  안 했을 경우 경고창
       return;
     }
@@ -44,7 +44,7 @@ const HobbyPage = ({ currentUser }) => {
           className="w-full mt-6 p-2 bg-green-500 text-white rounded"
           onClick={handleConfirm} // ✅ '선택 완료' 버튼 클릭 시 페이지 이동
         >
-          선택 완료
+          Done
         </button>
       </div>
     </div>

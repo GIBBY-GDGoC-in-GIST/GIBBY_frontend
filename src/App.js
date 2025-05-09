@@ -6,8 +6,8 @@ import ProfilePage from './pages/ProfilePage';
 import HobbyPage from './pages/HobbyPage';
 import AppointmentPage from './pages/AppointmentPage';
 import ChatPage from './pages/ChatPage';
-
-import { UserProvider } from './contexts/UserContext'; // ✅ 추가된 부분
+import TagSearchPage from './pages/TagSearchPage';
+import { UserProvider } from './contexts/UserContext';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -16,17 +16,21 @@ function App() {
     <Router>
       <div>
         {!currentUser ? (
-          <LoginPage setCurrentUser={setCurrentUser} />
+          <Routes>
+            {/* ✅ 로그인 안 해도 접근 가능한 페이지들 */}
+            <Route path="/tags" element={<TagSearchPage />} />
+            <Route path="*" element={<LoginPage setCurrentUser={setCurrentUser} />} />
+          </Routes>
         ) : (
-          <UserProvider currentUser={currentUser}> {/* ✅ UserProvider로 감싸기 */}
+          <UserProvider currentUser={currentUser}>
             <>
-              {/* 🏠 네비게이션 바 추가 */}
               <nav className="bg-blue-500 p-4 text-white flex justify-around">
                 <Link to="/home" className="hover:underline">🏠 Home</Link>
                 <Link to="/profile" className="hover:underline">👤 Profile</Link>
                 <Link to="/hobby" className="hover:underline">🎨 Hobby</Link>
                 <Link to="/appointment" className="hover:underline">📅 Appointment</Link>
                 <Link to="/chat" className="hover:underline">💬 Chatting</Link>
+                <Link to="/tags" className="hover:underline">🔖 Tags</Link> {/* ✅ 메뉴에 링크 추가 */}
               </nav>
 
               <Routes>
@@ -36,6 +40,7 @@ function App() {
                 <Route path="/hobby" element={<HobbyPage currentUser={currentUser} />} />
                 <Route path="/appointment" element={<AppointmentPage />} />
                 <Route path="/chat" element={<ChatPage />} />
+                <Route path="/tags" element={<TagSearchPage />} />
               </Routes>
             </>
           </UserProvider>

@@ -17,7 +17,8 @@ const PostPage = ({ currentUser }) => {
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-bold text-center mb-4">Post</h1>
-        <p className="text-gray-600 text-center">Welcome, {currentUser?.email}!</p>
+        <p className="text-gra
+        y-600 text-center">Welcome, {currentUser?.email}!</p>
         
         <div className="mt-6">
           <input 
