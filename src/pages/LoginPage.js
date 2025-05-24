@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const LoginPage = ({ setCurrentUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [name, setNickname] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -28,7 +28,7 @@ const LoginPage = ({ setCurrentUser }) => {
   };
 
   const handleSignUp = async () => {
-    if (!nickname) {
+    if (!name) {
       setErrorMessage("Please write your nickname.");
       return;
     }
@@ -37,13 +37,14 @@ const LoginPage = ({ setCurrentUser }) => {
       const res = await axios.post("http://3.25.186.102:3333/auth/register", {
         email,
         password,
-        nickname
+        name
       });
       const { token, user } = res.data;
       localStorage.setItem("token", token);
       setCurrentUser(user);
       setSuccessMessage("🎉 Sign up done!");
       setTimeout(() => {
+        setSuccessMessage(""); 
         navigate('/home');
       }, 1500);
     } catch (error) {
@@ -76,8 +77,8 @@ const LoginPage = ({ setCurrentUser }) => {
           <input
             className="w-full p-2 border rounded mb-2"
             type="text"
-            placeholder="Nickname"
-            value={nickname}
+            placeholder="name"
+            value={name}
             onChange={(e) => setNickname(e.target.value)}
           />
         )}

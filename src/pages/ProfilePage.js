@@ -10,7 +10,7 @@ const ProfilePage = ({ currentUser }) => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("https://api.newbie.gistory.me/api/users/me", {
+        const res = await axios.get("http://3.25.186.102:3333/profile", {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -32,7 +32,7 @@ const ProfilePage = ({ currentUser }) => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.put("http://3.25.186.102:3333/api/profile", {
+      await axios.put("http://3.25.186.102:3333/profile", {
         nickname
       }, {
         headers: {

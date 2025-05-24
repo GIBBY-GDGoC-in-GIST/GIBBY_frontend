@@ -20,7 +20,7 @@ const AppointmentPage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://3.25.186.102:3333/api/appointment",
+        "http://3.25.186.102:3333/appointment",
         {
           hobby,
           date,
