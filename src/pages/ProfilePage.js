@@ -32,7 +32,7 @@ const ProfilePage = ({ currentUser }) => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.put("https://api.newbie.gistory.me/api/users/me", {
+      await axios.put("http://3.25.186.102:3333/api/profile", {
         nickname
       }, {
         headers: {

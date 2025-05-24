@@ -6,7 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import HobbyPage from './pages/HobbyPage';
 import AppointmentPage from './pages/AppointmentPage';
 import ChatPage from './pages/ChatPage';
-import TagSearchPage from './pages/TagSearchPage';
+//import TagSearchPage from './pages/TagSearchPage';
 import { UserProvider } from './contexts/UserContext';
 
 function App() {
@@ -18,7 +18,6 @@ function App() {
         {!currentUser ? (
           <Routes>
             {/* ✅ 로그인 안 해도 접근 가능한 페이지들 */}
-            <Route path="/tags" element={<TagSearchPage />} />
             <Route path="*" element={<LoginPage setCurrentUser={setCurrentUser} />} />
           </Routes>
         ) : (

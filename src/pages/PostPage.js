@@ -10,7 +10,7 @@ const PostPage = ({ currentUser }) => {
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get('https://api.newbie.gistory.me/api/posts');
+      const res = await axios.get('http://3.25.186.102:3333/api/posts');
       setPosts(res.data.data);
     } catch (err) {
       console.error('게시글 불러오기 실패:', err);
@@ -28,7 +28,7 @@ const PostPage = ({ currentUser }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        'https://api.newbie.gistory.me/api/posts',
+        'http://3.25.186.102:3333/api/posts',
         { text: postText },
         {
           headers: {

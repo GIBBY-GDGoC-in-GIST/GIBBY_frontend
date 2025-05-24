@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  auth,
-  database,
-  ref,
-  set,
-} from '../firebase';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ setCurrentUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [nickname, setNickname] = useState(""); // ✅ 닉네임 추가
+  const [nickname, setNickname] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -21,12 +14,16 @@ const LoginPage = ({ setCurrentUser }) => {
 
   const handleLogin = async () => {
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      const user = result.user;
-      setCurrentUser(user); // 로그인된 사용자 전달
+      const res = await axios.post("http://3.25.186.102:3333/api/login", {
+        email,
+        password
+      });
+      const { token, user } = res.data;
+      localStorage.setItem("token", token);
+      setCurrentUser(user);
       navigate('/home');
     } catch (error) {
-      setErrorMessage("로그인 실패: " + error.message);
+      setErrorMessage("로그인 실패: " + (error.response?.data?.message || error.message));
     }
   };
 
@@ -35,25 +32,24 @@ const LoginPage = ({ setCurrentUser }) => {
       setErrorMessage("Please write your nickname.");
       return;
     }
-  
+
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
-      const user = result.user;
-  
-      const userRef = ref(database, `users/${user.uid}`);
-      await set(userRef, { nickname });
-  
+      const res = await axios.post("http://3.25.186.102:3333/api/register", {
+        email,
+        password,
+        nickname
+      });
+      const { token, user } = res.data;
+      localStorage.setItem("token", token);
       setCurrentUser(user);
-  
       setSuccessMessage("🎉 Sign up done!");
       setTimeout(() => {
         navigate('/home');
       }, 1500);
     } catch (error) {
-      setErrorMessage("Cannot sign up" + error.message);
+      setErrorMessage("회원가입 실패: " + (error.response?.data?.message || error.message));
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
@@ -76,7 +72,6 @@ const LoginPage = ({ setCurrentUser }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        {/* ✅ 회원가입 모드일 때만 닉네임 입력 필드 보여줌 */}
         {isSignUp && (
           <input
             className="w-full p-2 border rounded mb-2"
@@ -98,7 +93,7 @@ const LoginPage = ({ setCurrentUser }) => {
           className="w-full p-2 bg-gray-300 rounded mt-2"
           onClick={() => {
             setIsSignUp(!isSignUp);
-            setErrorMessage(""); // 에러 초기화
+            setErrorMessage("");
           }}
         >
           {isSignUp ? "Go to Login page" : "Go to Sign up page"}
@@ -106,7 +101,6 @@ const LoginPage = ({ setCurrentUser }) => {
 
         {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
         {successMessage && <p className="text-green-500 mt-2">{successMessage}</p>}
-
       </div>
     </div>
   );
