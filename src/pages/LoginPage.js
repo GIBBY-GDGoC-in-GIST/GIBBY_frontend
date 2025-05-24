@@ -14,7 +14,7 @@ const LoginPage = ({ setCurrentUser }) => {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://3.25.186.102:3333/api/login", {
+      const res = await axios.post("http://3.25.186.102:3333/auth/login", {
         email,
         password
       });
@@ -34,7 +34,7 @@ const LoginPage = ({ setCurrentUser }) => {
     }
 
     try {
-      const res = await axios.post("http://3.25.186.102:3333/api/register", {
+      const res = await axios.post("http://3.25.186.102:3333/auth/register", {
         email,
         password,
         nickname
