@@ -21,7 +21,7 @@ const HobbyPage = ({ currentUser }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gradient-to-r from-gray-400 to-blue-300 p-6">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-bold text-center mb-4">취미 선택</h1>
         <p className="text-gray-600 text-center">환영합니다, {currentUser?.email}님!</p>
@@ -30,10 +30,13 @@ const HobbyPage = ({ currentUser }) => {
           {hobbies.map((hobby, index) => (
             <button
               key={index}
-              className={`p-3 rounded-lg ${
-                selectedHobby === hobby ? "bg-indigo-700 text-white" : "bg-indigo-500 text-white"
-              }`}
-              onClick={() => handleSelectHobby(hobby)} // ✅ 버튼 클릭 시 선택한 취미 업데이트
+              className={`w-full p-2 rounded-lg font-medium transition 
+                ${
+                  selectedHobby === hobby
+                    ? "bg-gray-400 text-white shadow-lg" // ✅ 선택된 버튼은 음영 유지
+                    : "bg-neutral-100 text-neutral-800 border border-gray-300 shadow-md hover:bg-neutral-200 hover:shadow-lg"
+                }`}
+              onClick={() => handleSelectHobby(hobby)}
             >
               {hobby}
             </button>
@@ -41,8 +44,8 @@ const HobbyPage = ({ currentUser }) => {
         </div>
 
         <button 
-          className="w-full mt-6 p-2 bg-green-500 text-white rounded"
-          onClick={handleConfirm} // ✅ '선택 완료' 버튼 클릭 시 페이지 이동
+          className="w-full mt-6 p-2 bg-white text-black rounded shadow-md hover:shadow-lg border border-gray-300"
+            onClick={handleConfirm} // ✅ '선택 완료' 버튼 클릭 시 페이지 이동
         >
           Done
         </button>

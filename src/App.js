@@ -24,13 +24,12 @@ function App() {
         ) : (
           <UserProvider currentUser={currentUser}>
             <>
-              <nav className="bg-blue-500 p-4 text-white flex justify-around">
-                <Link to="/home" className="hover:underline">🏠 Home</Link>
-                <Link to="/profile" className="hover:underline">👤 Profile</Link>
-                <Link to="/hobby" className="hover:underline">🎨 Hobby</Link>
-                <Link to="/appointment" className="hover:underline">📅 Appointment</Link>
-                <Link to="/chat" className="hover:underline">💬 Chatting</Link>
-                <Link to="/tags" className="hover:underline">🔖 Tags</Link> {/* ✅ 메뉴에 링크 추가 */}
+              <nav className="bg-white p-4 text-black flex justify-around shadow">
+                <Link to="/home" className="hover:underline">Home</Link>
+                <Link to="/profile" className="hover:underline"> Profile</Link>
+                <Link to="/hobby" className="hover:underline"> Hobby</Link>
+                <Link to="/appointment" className="hover:underline"> Appointment</Link>
+                <Link to="/chat" className="hover:underline">Chatting</Link>
               </nav>
 
               <Routes>
@@ -40,7 +39,7 @@ function App() {
                 <Route path="/hobby" element={<HobbyPage currentUser={currentUser} />} />
                 <Route path="/appointment" element={<AppointmentPage />} />
                 <Route path="/chat" element={<ChatPage />} />
-                <Route path="/tags" element={<TagSearchPage />} />
+                
               </Routes>
             </>
           </UserProvider>

@@ -1,82 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { auth } from '../firebase'; // Firebase 인증
-
-const db = getFirestore();
 
 const ChatPage = () => {
   const location = useLocation();
-  const { hobby, date, time } = location.state || {};
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const { hobby } = location.state || {};
 
-  useEffect(() => {
-    // Firestore에서 실시간으로 메시지 받아오기
-    const q = query(
-      collection(db, "chats"),
-      orderBy("timestamp")
-    );
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const messagesData = [];
-      querySnapshot.forEach((doc) => {
-        messagesData.push(doc.data());
-      });
-      setMessages(messagesData);
-    });
-    
-    return () => unsubscribe();
-  }, []);
-
-  const handleSendMessage = async () => {
-    if (message.trim() === "") return;
-
-    try {
-      await addDoc(collection(db, "chats"), {
-        text: message,
-        timestamp: new Date(),
-        sender: auth.currentUser?.email,
-        hobby,
-        date,
-        time
-      });
-      setMessage(""); // 메시지 입력 후 비우기
-    } catch (error) {
-      console.error("Error adding message: ", error);
-    }
+  // 취미별 오픈카카오톡 링크 매핑
+  const openChatLinks = {
+    "등산": "https://open.kakao.com/o/example1",
+    "요리": "https://open.kakao.com/o/example2",
+    "게임": "https://open.kakao.com/o/example3",
+    "독서": "https://open.kakao.com/o/example4",
+    "음악 감상": "https://open.kakao.com/o/example5",
+    "운동": "https://open.kakao.com/o/example6",
+    "default": "https://open.kakao.com/o/default"
   };
 
+  useEffect(() => {
+    if (hobby) {
+      const link = openChatLinks[hobby] || openChatLinks["default"];
+      window.open(link, "_blank"); // 새 창으로 열기
+    }
+  }, [hobby]);
+
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-3xl font-bold text-center mb-4">Chatting</h1>
-        <p className="text-gray-600 text-center mb-4">Hobby: {hobby}</p>
-        <p className="text-gray-600 text-center mb-4">Appointment Date: {date} Time: {time}</p>
-
-        {/* 채팅 메시지 목록 */}
-        <div className="h-80 overflow-y-scroll mb-4 border-b pb-4">
-          {messages.map((msg, index) => (
-            <div key={index} className="mb-2">
-              <p className="font-bold">{msg.sender}</p>
-              <p>{msg.text}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* 메시지 입력 */}
-        <input
-          type="text"
-          className="w-full p-2 border rounded mb-2"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Please write message..."
-        />
-        <button 
-          className="w-full p-2 bg-blue-500 text-white rounded"
-          onClick={handleSendMessage}
-        >
-          Send
-        </button>
+    <div className="min-h-screen bg-gradient-to-r from-gray-400 to-blue-300 flex items-center justify-center">
+      <div className="bg-white p-8 rounded shadow text-center">
+        <h2 className="text-xl font-bold mb-4">채팅방으로 이동 중...</h2>
+        <p className="text-gray-600">잠시 후 오픈채팅방으로 이동합니다.</p>
+        <p className="mt-4">만약 자동으로 이동하지 않으면 <br />
+          <a
+            href={openChatLinks[hobby] || openChatLinks["default"]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            이 링크를 클릭하세요.
+          </a>
+        </p>
       </div>
     </div>
   );

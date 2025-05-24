@@ -1,51 +1,57 @@
+
 import React, { useState, useEffect } from 'react';
-import { database, ref, set, get } from '../firebase';
-import { useUser } from '../contexts/UserContext';
+import axios from 'axios';
 
 const ProfilePage = ({ currentUser }) => {
-  const { nickname: globalNickname, setNickname: setGlobalNickname } = useUser();
   const [nickname, setNickname] = useState('');
+  const [message, setMessage] = useState('');
 
-  // Firebase에서 닉네임 초기 로딩
   useEffect(() => {
-    if (currentUser) {
-      const userRef = ref(database, `users/${currentUser.uid}`);
-      get(userRef).then((snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          if (data.nickname) {
-            setNickname(data.nickname);           // 입력창에 표시
-            setGlobalNickname(data.nickname);     // 전역 상태로 저장
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("https://api.newbie.gistory.me/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        }
-      });
-    }
-  }, [currentUser]);
+        });
+        setNickname(res.data.nickname || '');
+      } catch (err) {
+        console.error("프로필 조회 실패:", err);
+        setMessage("❌ 프로필 정보를 불러오지 못했습니다.");
+      }
+    };
+    fetchProfile();
+  }, []);
 
-  // 프로필 저장
   const handleSave = async () => {
-    if (!nickname) {
-      alert('Please write your nickname!');
+    if (!nickname.trim()) {
+      setMessage("닉네임을 입력해주세요.");
       return;
     }
 
     try {
-      const userRef = ref(database, `users/${currentUser.uid}`);
-      await set(userRef, { nickname });             // Firebase에 저장
-      setGlobalNickname(nickname);                  // 전역 상태 업데이트
-      alert('Profile saved!');
-    } catch (error) {
-      console.error("Profile not saved", error);
-      alert('Error occured while saving the profile.');
+      const token = localStorage.getItem("token");
+      await axios.put("https://api.newbie.gistory.me/api/users/me", {
+        nickname
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setMessage("✅ 프로필이 저장되었습니다.");
+    } catch (err) {
+      console.error("프로필 저장 실패:", err);
+      setMessage("❌ 프로필 저장에 실패했습니다.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-300 p-6 flex justify-center">
+    <div className="min-h-screen bg-gradient-to-r from-gray-400 to-blue-300 p-6 flex justify-center">
       <div className="bg-white p-8 rounded-lg shadow-lg text-center w-96">
         <h1 className="text-3xl font-bold">Profile</h1>
         <p className="text-gray-600 mt-2">Current User: {currentUser?.email}</p>
-  
+
         <div className="mt-6">
           <input
             type="text"
@@ -54,25 +60,21 @@ const ProfilePage = ({ currentUser }) => {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-  
+
           <button
             className="w-full mt-4 p-2 bg-gray-500 text-white rounded"
             onClick={handleSave}
           >
             Save Profile
           </button>
-  
-          {/* ✅ 바로 반영되는 닉네임 표시 */}
-          {globalNickname && (
-            <p className="mt-4 text-lg font-semibold text-green-600">
-              Saved nickname: {globalNickname}
-            </p>
+
+          {message && (
+            <p className="mt-4 text-md text-blue-600">{message}</p>
           )}
         </div>
       </div>
     </div>
   );
-  
 };
 
 export default ProfilePage;

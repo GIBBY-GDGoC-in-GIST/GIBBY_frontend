@@ -56,7 +56,7 @@ const LoginPage = ({ setCurrentUser }) => {
   
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-r from-pink-400 to-yellow-300">
+    <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-80 text-center">
         <h2 className="text-2xl font-bold mb-4">{isSignUp ? "Sign up" : "Login"}</h2>
 
@@ -88,7 +88,7 @@ const LoginPage = ({ setCurrentUser }) => {
         )}
 
         <button
-          className="w-full p-2 bg-pink-500 text-white rounded mt-2"
+          className="w-full p-2 bg-gray-500 text-white rounded mt-2"
           onClick={isSignUp ? handleSignUp : handleLogin}
         >
           {isSignUp ? "Sign up" : "Login"}

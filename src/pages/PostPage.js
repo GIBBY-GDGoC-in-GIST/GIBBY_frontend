@@ -1,39 +1,75 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const PostPage = ({ currentUser }) => {
-  const [postText, setPostText] = useState("");  // 입력값 저장
-  const [posts, setPosts] = useState([]);        // 게시물 목록 저장
+  const [postText, setPostText] = useState('');
+  const [posts, setPosts] = useState([]);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handlePost = () => {
-    if (postText.trim() === "") return; // 빈 값 방지
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get('https://api.newbie.gistory.me/api/posts');
+      setPosts(res.data.data);
+    } catch (err) {
+      console.error('게시글 불러오기 실패:', err);
+      setError('❌ 게시글을 불러오지 못했습니다.');
+    }
+  };
 
-    // 새 게시물 추가
-    setPosts([...posts, { text: postText, author: currentUser?.email }]);
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
-    setPostText(""); // 입력값 초기화
+  const handlePost = async () => {
+    if (postText.trim() === '') return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        'https://api.newbie.gistory.me/api/posts',
+        { text: postText },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPostText('');
+      setMessage('✅ 게시글이 작성되었습니다.');
+      fetchPosts();
+    } catch (err) {
+      console.error('게시글 작성 실패:', err);
+      setMessage('❌ 게시글 작성에 실패했습니다.');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gradient-to-r from-gray-400 to-blue-300 p-6">
+    
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-bold text-center mb-4">Post</h1>
-        <p className="text-gra
-        y-600 text-center">Welcome, {currentUser?.email}!</p>
-        
+        <p className="text-gray-600 text-center mb-4">Welcome, {currentUser?.email}!</p>
+
         <div className="mt-6">
-          <input 
+          <input
             type="text"
-            placeholder="Writing post..."
+            placeholder="Write your post..."
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
             className="w-full p-2 border rounded mb-2"
           />
-          <button 
+          <button
             onClick={handlePost}
-            className="w-full p-2 bg-blue-500 text-white rounded">
+            className="w-full p-2 bg-gray-500 text-white rounded"
+          >
             Post
           </button>
         </div>
+
+        {message && <p className="mt-4 text-blue-600">{message}</p>}
+        {error && <p className="mt-4 text-red-500">{error}</p>}
 
         <div className="mt-6 border-t pt-4">
           <h2 className="text-xl font-semibold mb-2">📌 Postings</h2>
