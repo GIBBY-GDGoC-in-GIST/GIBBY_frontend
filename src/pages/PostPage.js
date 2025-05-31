@@ -3,19 +3,28 @@ import axios from 'axios';
 
 const PostPage = ({ currentUser }) => {
   const [postText, setPostText] = useState('');
-  const [posts, setPosts] = useState([]); // ✅ 빈 배열로 초기화
+  const [posts, setPosts] = useState([]);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get('http://3.25.186.102:3333/recruit');
-      setPosts(res.data?.data || []); // ✅ 안전하게 처리 (null/undefined 방지)
+      const token = localStorage.getItem('token');
+      console.log('Current token:', token);
+
+      const res = await axios.get('http://3.25.186.102:3333/recruit', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setPosts(res.data || []);
     } catch (err) {
-      console.error('게시글 불러오기 실패:', err);
+      console.error('게시글 불러오기 실패:', err.response?.data || err.message || err);
       setError('❌ 게시글을 불러오지 못했습니다.');
     }
   };
+
 
   useEffect(() => {
     fetchPosts();
@@ -26,20 +35,26 @@ const PostPage = ({ currentUser }) => {
 
     try {
       const token = localStorage.getItem('token');
+      console.log('Current token:', token);
+
       await axios.post(
         'http://3.25.186.102:3333/recruit',
-        { text: postText },
+        {
+          sport: 'Soccer', // 고정 값 (원하시면 수정 가능)
+          description: postText,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       setPostText('');
       setMessage('✅ 게시글이 작성되었습니다.');
-      fetchPosts(); // 작성 후 다시 불러오기
+      fetchPosts();
     } catch (err) {
-      console.error('게시글 작성 실패:', err);
+      console.error('게시글 작성 실패:', err.response?.data || err.message || err);
       setMessage('❌ 게시글 작성에 실패했습니다.');
     }
   };
@@ -49,7 +64,7 @@ const PostPage = ({ currentUser }) => {
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-bold text-center mb-4">Post</h1>
         <p className="text-gray-600 text-center mb-4">
-          Welcome, {currentUser?.email}!
+          Welcome!
         </p>
 
         <div className="mt-6">
@@ -81,7 +96,7 @@ const PostPage = ({ currentUser }) => {
                 key={index}
                 className="border p-2 rounded mb-2 bg-gray-100 shadow-sm"
               >
-                <p>{post?.text || 'No content'}</p>
+                <p>{post?.description || 'No content'}</p>
               </div>
             ))
           )}

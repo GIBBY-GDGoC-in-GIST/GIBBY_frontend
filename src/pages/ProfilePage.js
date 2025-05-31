@@ -18,7 +18,7 @@ const ProfilePage = ({ currentUser }) => {
         setNickname(res.data.nickname || '');
       } catch (err) {
         console.error("프로필 조회 실패:", err);
-        setMessage("❌ 프로필 정보를 불러오지 못했습니다.");
+        //setMessage("❌ 프로필 정보를 불러오지 못했습니다.");
       }
     };
     fetchProfile();
