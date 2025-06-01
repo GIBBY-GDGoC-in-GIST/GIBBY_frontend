@@ -14,7 +14,6 @@ const AppointmentPage = () => {
   const [hobby, setHobby] = useState(initialHobby);
   const [error, setError] = useState("");
 
-  const hobbies = ["등산", "요리", "게임", "독서", "음악 감상", "운동"];
 
   const handleAppointment = async () => {
     if (!date || !time || !hobby) {
@@ -54,21 +53,6 @@ const AppointmentPage = () => {
 
         {/* ✅ 여기 Hobby 제대로 표시됨! */}
         <p className="text-gray-600 text-center mb-4">Hobby: {hobby}</p>
-
-        <div className="mb-4">
-          <select
-            value={hobby}
-            onChange={(e) => setHobby(e.target.value)}
-            className="w-full p-2 border rounded"
-          >
-            <option value="">Choose your hobby</option>
-            {hobbies.map((hobbyOption, index) => (
-              <option key={index} value={hobbyOption}>
-                {hobbyOption}
-              </option>
-            ))}
-          </select>
-        </div>
 
         <input
           type="date"
