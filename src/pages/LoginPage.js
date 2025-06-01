@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const LoginPage = ({ setCurrentUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");  // ✅ name 추가
   const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -25,37 +26,61 @@ const LoginPage = ({ setCurrentUser }) => {
 
       setCurrentUser(access_token);
 
-      // ✅ 바로 home 이동
       navigate('/home');
     } catch (error) {
       setErrorMessage("로그인 실패: " + (error.response?.data?.message || error.message));
     }
   };
+const handleSignUp = async () => {
+  if (!name.trim()) {
+    setErrorMessage("닉네임을 입력해주세요.");
+    return;
+  }
 
-  const handleSignUp = async () => {
-    try {
-      const res = await axios.post('http://3.25.186.102:3333/auth/register', {
-        email,
-        password
-      });
+  try {
+    const res = await axios.post('http://3.25.186.102:3333/auth/register', {
+      name,
+      email,
+      password
+    });
 
-      const { access_token } = res.data;
+    const { access_token } = res.data;
 
-      localStorage.setItem("token", access_token);
-      console.log('Saved token (signup):', access_token);
+    localStorage.setItem("token", access_token);
+    console.log('Saved token (signup):', access_token);
 
-      setCurrentUser(access_token);
+    setCurrentUser(access_token);
 
+    // ✅ 성공 메시지 추가
+    setSuccessMessage("Sign up done!");
+    setErrorMessage("");  // 에러메시지 초기화
+
+    // ✅ 1~2초 후 home 이동 (원하면)
+    setTimeout(() => {
       navigate('/home');
-    } catch (error) {
-      setErrorMessage("Cannot sign up: " + (error.response?.data?.message || error.message));
-    }
-  };
+    }, 1000);
+
+  } catch (error) {
+    setErrorMessage("Cannot sign up: " + (error.response?.data?.message || error.message));
+    setSuccessMessage("");  // 성공 메시지 초기화
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-80 text-center">
         <h2 className="text-2xl font-bold mb-4">{isSignUp ? "Sign up" : "Login"}</h2>
+
+        {isSignUp && (
+          <input
+            className="w-full p-2 border rounded mb-2"
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        )}
 
         <input
           className="w-full p-2 border rounded mb-2"

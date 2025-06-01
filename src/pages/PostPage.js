@@ -6,7 +6,28 @@ const PostPage = ({ currentUser }) => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [userName, setUserName] = useState('');  // ✅ 사용자 이름 state 추가
 
+  // ✅ 사용자 프로필(name) 가져오기
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      console.log('Profile fetch token:', token);  // ✅ 토큰 확인용 추가!
+      const res = await axios.get('http://3.25.186.102:3333/auth/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("✅ 프로필 정보:", res.data);
+      setUserName(res.data.name || '');
+    } catch (err) {
+      console.error('프로필 조회 실패:', err.response?.data || err.message || err);
+      setUserName('');  // 실패 시 빈 값
+    }
+  };
+
+  // ✅ 게시글 목록 가져오기
   const fetchPosts = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -25,11 +46,13 @@ const PostPage = ({ currentUser }) => {
     }
   };
 
-
+  // ✅ mount 시 프로필 + 게시글 불러오기
   useEffect(() => {
+    fetchUserProfile();
     fetchPosts();
   }, []);
 
+  // ✅ 게시글 작성
   const handlePost = async () => {
     if (postText.trim() === '') return;
 
@@ -40,7 +63,7 @@ const PostPage = ({ currentUser }) => {
       await axios.post(
         'http://3.25.186.102:3333/recruit',
         {
-          sport: 'Soccer', // 고정 값 (원하시면 수정 가능)
+          sport: 'Soccer',
           description: postText,
         },
         {
@@ -63,8 +86,10 @@ const PostPage = ({ currentUser }) => {
     <div className="min-h-screen bg-gradient-to-r from-gray-400 to-blue-300 p-6">
       <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-bold text-center mb-4">Post</h1>
+
+        {/* ✅ Welcome 옆에 사용자 이름 표시 */}
         <p className="text-gray-600 text-center mb-4">
-          Welcome!
+          Welcome{userName ? `, ${userName}` : ''}!
         </p>
 
         <div className="mt-6">
